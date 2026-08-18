@@ -4,6 +4,17 @@
 }
 html,
 body {
+  line-height: 1.4;
   background-color: var(--primary-yellow);
   color: var(--primary-text);
+  font-family: Inter, Roboto, 'Helvetica Neue', 'Arial Nova', 'Nimbus Sans', Arial, sans-serif;
+  font-size: 22px;
+}
+body{
+  padding: 2rem;
+}
+
+h2,h3 {
+  text-transform: uppercase;
+  font-weight: bold;
 }

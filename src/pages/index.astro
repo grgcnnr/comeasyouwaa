@@ -1,28 +1,67 @@
 ---
 import Layout from "../Layout.astro"
 import headingImg from "../images/heading.svg"
+import Schedule from "../components/Schedule.astro"
 ---
 
 <Layout>
   <main>
-    <h1>
-      <span> Come as you Waa! </span>
-    </h1>
+    <div class="sections">
+      <h1>
+        <span> Come as you Waa! </span>
+      </h1>
+      <section class="text">
+        <h2>
+          An alternative & indie music choir<br /> directed Hannah Curwood
+        </h2>
+        <p>
+          No auditions, no sheet music, no pressure.<br />
+          Just voices, bodies, and the ancient, ordinary magic of singing together.
+        </p>
+        <p>
+          Make a glorious noise.<br />
+          All Voices Welcome.
+        </p>
+      </section>
+      <section class="sched">
+        <Schedule />
+      </section>
+    </div>
   </main>
 </Layout>
 
 <style define:vars={{ headingImg: `url(${headingImg.src})` }}>
   main {
-    margin-inline: auto;
-    max-width: 800px;
+    container-type: inline-size;
+  }
+
+  .sections {
+    display: grid;
+    column-rule-width: 1px;
+    column-rule-style: solid;
+    column-rule-color: #1b1900;
+    grid-template-areas:
+      "title ."
+      "text sched";
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 2rem;
+  }
+
+  section.text {
+    grid-area: text;
+  }
+  section.sched {
+    grid-area: sched;
   }
 
   h1 {
-    width: 100%;
-    aspect-ratio: 1;
-    background: var(--headingImg);
-    background-position: center center;
+    grid-area: title;
+    width: 50cqw;
+    aspect-ratio: 1.22;
+    background: var(--headingImg) center center no-repeat;
     background-size: contain;
+    margin-block-end: 2em;
+
     span {
       position: absolute;
       width: 1px;
@@ -33,5 +72,13 @@ import headingImg from "../images/heading.svg"
       clip: rect(0, 0, 0, 0);
       border: 0;
     }
+  }
+
+  h2 {
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  p {
+    text-wrap: balance;
   }
 </style>

@@ -1,0 +1,47 @@
+---
+import ical, { type VEvent } from "node-ical"
+import { WEBEVENTS_CALENDAR_URL } from "astro:env/server"
+const webEvents = await ical.async.fromURL(WEBEVENTS_CALENDAR_URL)
+const dateFormat = new Intl.DateTimeFormat("en-NZ", {
+  dateStyle: "short",
+  timeStyle: "short"
+})
+const now = new Date()
+const upComing: VEvent[] = []
+for (const event of Object.values(webEvents)) {
+  if (event?.type === "VEVENT" && event.start > now) {
+    upComing.push(event)
+  }
+}
+
+upComing.sort((a, b) => a.start.getTime() - b.start.getTime())
+---
+{upComing.length &&
+  <h3>Next meeting</h3>
+  <ul>
+    {
+      upComing.slice(0, 3).map((event) => (
+        <li>
+          <h4>{dateFormat.format(event.start)}</h4>
+            {event.location && <span>at {event.location}</span>}
+        </li>
+      ))
+    }
+  </ul>
+}
+
+
+<style>
+ul{
+    padding-inline-start: 1em;
+  }
+  li {
+    list-style: "+ ";
+  }
+  h4{
+    margin: 0;
+  }
+  span{
+    font-size: .9em;
+  }
+</style>
