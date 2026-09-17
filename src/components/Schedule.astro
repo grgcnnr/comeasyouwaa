@@ -1,5 +1,5 @@
 ---
-import ical, { type VEvent } from "node-ical"
+import ical, { type DateWithTimeZone, type VEvent } from "node-ical"
 import { WEBEVENTS_CALENDAR_URL } from "astro:env/server"
 const webEvents = await ical.async.fromURL(WEBEVENTS_CALENDAR_URL)
 const dateFormat = new Intl.DateTimeFormat("en-NZ", {
@@ -7,14 +7,42 @@ const dateFormat = new Intl.DateTimeFormat("en-NZ", {
   timeStyle: "short"
 })
 const now = new Date()
-const upComing: VEvent[] = []
+
+type TMinimalEvent = {
+  location? : string
+  start: DateWithTimeZone
+}
+
+const upComing: TMinimalEvent[] = []
+
+
 for (const event of Object.values(webEvents)) {
-  if (event?.type === "VEVENT" && event.start > now) {
-    upComing.push(event)
+  if (event?.type === "VEVENT"){
+    // if this is a reoccurring event
+    if(event.rrule){
+      const instances = ical.expandRecurringEvent(event, {
+        from: now,
+        // Expand recurring event for next 120 days
+        to: new Date(Date.now() + 120 * 24 * 60 * 60 * 1000)
+      });
+
+      const reOccurringEvents:TMinimalEvent[] = instances.map(instance => ({start: instance.start, location: event.location?.toString() }))
+
+      upComing.push(...reOccurringEvents)
+
+    }
+
+    else if (event.start > now) {
+      upComing.push({
+        start: event.start,
+        location: event.location?.toString(),
+      })
+    }
   }
 }
 
 upComing.sort((a, b) => a.start.getTime() - b.start.getTime())
+
 ---
 {!!upComing.length &&
   <h3>Next meeting</h3>
@@ -37,6 +65,7 @@ ul{
   }
   li {
     list-style: "+ ";
+    margin-bottom: 8px;
   }
   h4{
     margin: 0;
