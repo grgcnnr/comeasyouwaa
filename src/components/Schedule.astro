@@ -16,7 +16,7 @@ for (const event of Object.values(webEvents)) {
 
 upComing.sort((a, b) => a.start.getTime() - b.start.getTime())
 ---
-{upComing.length &&
+{!!upComing.length &&
   <h3>Next meeting</h3>
   <ul>
     {
