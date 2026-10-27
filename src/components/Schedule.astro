@@ -4,7 +4,8 @@ import { WEBEVENTS_CALENDAR_URL } from "astro:env/server"
 const webEvents = await ical.async.fromURL(WEBEVENTS_CALENDAR_URL)
 const dateFormat = new Intl.DateTimeFormat("en-NZ", {
   dateStyle: "short",
-  timeStyle: "short"
+  timeStyle: "short",
+  timeZone: "Pacific/Auckland"
 })
 const now = new Date()
 
@@ -50,7 +51,7 @@ upComing.sort((a, b) => a.start.getTime() - b.start.getTime())
     {
       upComing.slice(0, 3).map((event) => (
         <li>
-          <h4>{dateFormat.format(event.start)}</h4>
+          <h4><time datetime={event.start.toISOString()}>{dateFormat.format(event.start)}</time></h4>
             {event.location && <span>at {event.location}</span>}
         </li>
       ))
