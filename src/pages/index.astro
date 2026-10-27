@@ -40,11 +40,18 @@ import Schedule from "../components/Schedule.astro"
     column-rule-width: 1px;
     column-rule-style: solid;
     column-rule-color: #1b1900;
-    grid-template-areas:
-      "title ."
-      "text sched";
-    grid-template-columns: 1fr 1fr;
+
     grid-gap: 2rem;
+    grid-template-areas:
+      "title"
+      "text"
+      "sched";
+    @media (width > 950px) {
+      grid-template-areas:
+        "title ."
+        "text sched";
+      grid-template-columns: 1fr 1fr;
+    }
   }
 
   section.text {
